@@ -44,10 +44,11 @@ export default class ScanScreen extends Component {
   }
   _confim = ()=> 
     axios.post('http://192.168.0.76:8000/api',  this.state)
-          .then(Vibration.vibrate([200,200]))
-          .then(this._toggleModal())
-          .then(this.toggleSucced())
-          .then(setTimeout(()=>{this.toggleSucced()}, 2000))
+          .then((response) =>  { Vibration.vibrate([200,200])
+                              this._toggleModal()
+                              this.toggleSucced()
+                              setTimeout(()=>{this.toggleSucced()}, 2000)}) 
+          .catch(error => console.warn(error.request._response))
 
   getDate = () => {
     let date = new Date()
