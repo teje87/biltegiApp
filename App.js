@@ -10,7 +10,8 @@ import {
   AppRegistry,
   StyleSheet,
   View,
-  ScrollView
+  ScrollView,
+  Vibration
 } from 'react-native';
 
 import QRCodeScanner from 'react-native-qrcode-scanner';
@@ -30,8 +31,6 @@ export default class ScanScreen extends Component {
       lote : "",
       loteFilm : "",
       operario:""
-      
-      
     }
   }
 
@@ -39,9 +38,10 @@ export default class ScanScreen extends Component {
     this.setState({ isModalVisible: !this.state.isModalVisible });
   
 
-    // RESOLVER QUE EL MOVIL Y SERVER ESTEN EN LA MISMA RED!!!
   _confim = ()=> 
     axios.post('http://192.168.0.76:8000/api',  this.state)
+          .then(Vibration.vibrate([200,200]))
+          .then(this._toggleModal())
 
   getDate = () => {
     let date = new Date()
@@ -105,38 +105,47 @@ export default class ScanScreen extends Component {
                     <RkTextInput 
                       rkType = {"form"}
                       value = { this.state.date}
+                      onChangeText={(text) => this.setState({date: text})}
                       placeholder='Fecha'/>
                     <RkTextInput 
                       rkType = {"form"}
                       value = {this.state.time}
+                      onChangeText={(text) => this.setState({time: text})}
                       placeholder='Hora'/>
                     <RkTextInput 
                       rkType= {"form"}
                       value= {this.state.referencia}
+                      onChangeText={(text) => this.setState({referencia: text})}
                       placeholder='referencia'/>
                     <RkTextInput 
                       rkType= {"form"}
                       value= {this.state.sulfatante}
+                      onChangeText={(text) => this.setState({sulfatante: text})}
                       placeholder='sulfatante'/>
                     <RkTextInput 
                       rkType= {"form"}
                       value= {this.state.lote}
+                      onChangeText={(text) => this.setState({lote: text})}
                       placeholder='Lote'/>
                     <RkTextInput 
                       rkType = {"form"}
                       value= {this.state.loteFilm}
+                      onChangeText={(text) => this.setState({loteFilm: text})}
                       placeholder='Lote Film'/>
                     <RkTextInput 
                       rkType = {"form"}
                       value= {this.state.caducidad}
+                      onChangeText={(text) => this.setState({caducidad: text})}
                       placeholder='Fecha de caducidad'/>
                     <RkTextInput 
                       rkType = {"form"}
                       value= {this.state.bobina}
+                      onChangeText={(text) => this.setState({bobina: text})}
                       placeholder='Bobina'/>
                     <RkTextInput 
                       rkType = {"form"}
                       value= {this.state.linea}
+                      onChangeText={(text) => this.setState({linea: text})}
                       placeholder='Linea'/>
                     <RkTextInput 
                       rkType = {"form"}
