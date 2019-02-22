@@ -5,6 +5,7 @@ import Modal from "react-native-modal";
 import Icon from 'react-native-vector-icons/dist/FontAwesome';
 import {RkButton,RkText, RkTextInput, RkCard, RkPicker} from 'react-native-ui-kitten';
 import axios from 'axios';
+import LottieView from 'lottie-react-native';
 
 import {
   AppRegistry,
@@ -21,6 +22,7 @@ export default class ScanScreen extends Component {
   constructor(props){
     super(props)
     this.state = {
+      succed: false,
       pickedValue: "",
       pikerVisible: true,
       isModalVisible: false,
@@ -37,11 +39,15 @@ export default class ScanScreen extends Component {
   _toggleModal = () =>
     this.setState({ isModalVisible: !this.state.isModalVisible });
   
-
+  toggleSucced = () => {
+    this.setState({ succed: !this.state.succed })
+  }
   _confim = ()=> 
     axios.post('http://192.168.0.76:8000/api',  this.state)
           .then(Vibration.vibrate([200,200]))
           .then(this._toggleModal())
+          .then(this.toggleSucced())
+          .then(setTimeout(()=>{this.toggleSucced()}, 2000))
 
   getDate = () => {
     let date = new Date()
@@ -91,9 +97,20 @@ export default class ScanScreen extends Component {
           cameraStyle={styles.cameraContainer}
           bottomContent={
             <View>
-          
               
-              <Modal isVisible= {this.state.isModalVisible}>
+              <Modal  isVisible= {this.state.succed}
+                      onBackdropPress={() => this.setState({ succed: false })}>
+                      <View style={{ flex: 1 }}>
+                        <LottieView
+                          source={require('./res/1127-success.json')}
+                          autoPlay
+                          loop = {false}/>
+                    </View>
+              </Modal>
+              
+              
+              <Modal  isVisible= {this.state.isModalVisible}>
+
                 <ScrollView style={{ flex: 1, alignContent: "center", borderRadius:10 }}>
                   <RkCard style= {{ flex: 1, alignItems: "center", borderRadius:10}}>
                   
