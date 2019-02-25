@@ -22,6 +22,7 @@ export default class ScanScreen extends Component {
   constructor(props){
     super(props)
     this.state = {
+      animation: require("./res/succedGreen.json"),
       succed: false,
       pickedValue: "",
       pikerVisible: true,
@@ -36,19 +37,29 @@ export default class ScanScreen extends Component {
     }
   }
 
+  
+
   _toggleModal = () =>
     this.setState({ isModalVisible: !this.state.isModalVisible });
   
-  toggleSucced = () => {
+  toggleResultAnim = () => {
     this.setState({ succed: !this.state.succed })
   }
+
   _confim = ()=> 
+
     axios.post('http://192.168.0.76:8000/api',  this.state)
-          .then((response) =>  { Vibration.vibrate([200,200])
+          .then((response) =>  { 
+                              this.setState({animation : require("./res/succedGreen.json")})
+                              Vibration.vibrate([200,200])
                               this._toggleModal()
-                              this.toggleSucced()
-                              setTimeout(()=>{this.toggleSucced()}, 2000)}) 
-          .catch(error => console.warn(error.request._response))
+                              this.toggleResultAnim()
+                              setTimeout(()=>{this.toggleResultAnim()}, 2000)}) 
+          .catch((error) => { 
+                              this.setState({animation : require("./res/failRed.json")})
+                              this.toggleResultAnim()
+                              setTimeout(()=>{this.toggleResultAnim()}, 2000) 
+                              console.warn(error.request._response)})
 
   getDate = () => {
     let date = new Date()
@@ -90,7 +101,12 @@ export default class ScanScreen extends Component {
   }
 
   render() {
+
+   
+
     return (
+
+      
         <QRCodeScanner
           reactivate={true}
           reactivateTimeout= {4000}
@@ -103,7 +119,8 @@ export default class ScanScreen extends Component {
                       onBackdropPress={() => this.setState({ succed: false })}>
                       <View style={{ flex: 1 }}>
                         <LottieView
-                          source={require('./res/1127-success.json')}
+                          source={this.state.animation}
+                          resizeMode = "cover"
                           autoPlay
                           loop = {false}/>
                     </View>
