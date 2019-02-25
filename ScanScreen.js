@@ -111,6 +111,7 @@ export default class ScanScreen extends Component {
           reactivate={true}
           ref={(node) => { this.scanner = node }}
           reactivateTimeout= {4000}
+          cameraProps={{captureAudio: false}}
           onRead={this.onSuccess.bind(this)}
           cameraStyle={styles.cameraContainer}
           bottomContent={
