@@ -108,7 +108,7 @@ export default class ScanScreen extends Component {
     return (
       
         <QRCodeScanner
-          reactivate={false}
+          reactivate={true}
           ref={(node) => { this.scanner = node }}
           reactivateTimeout= {4000}
           onRead={this.onSuccess.bind(this)}
@@ -116,7 +116,7 @@ export default class ScanScreen extends Component {
           bottomContent={
             <View>
               
-              <Button onPress={ ()=> console.warn("this.scanner")}> Boton</Button>
+        
               <Modal  isVisible= {this.state.succed}
                       onBackdropPress={() => this.setState({ succed: false })}>
                       <View style={{ flex: 1 }}>

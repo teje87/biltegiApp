@@ -1,7 +1,8 @@
 import React from "react";
 import { View, Text } from "react-native";
-import { createBottomTabNavigator, createAppContainer } from "react-navigation";
+import { createBottomTabNavigator, createStackNavigator, createAppContainer } from "react-navigation";
 import ScanScreen from "./ScanScreen";
+import PreScanScreen from "./PreScanScreen"
 
 class HomeScreen extends React.Component {
   render() {
@@ -13,9 +14,14 @@ class HomeScreen extends React.Component {
   }
 }
 
+const PreScanStack = createStackNavigator({
+    PreScan: PreScanScreen,
+    Scan: ScanScreen
+})
+
 const AppNavigator = createBottomTabNavigator({
   Home: HomeScreen,
-  Scan: ScanScreen
+  PreScan: PreScanStack,
 });
 
 export default createAppContainer(AppNavigator);
