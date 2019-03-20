@@ -6,7 +6,7 @@ import Icon, { Button } from 'react-native-vector-icons/dist/FontAwesome';
 import {RkButton,RkText, RkTextInput, RkCard, RkPicker} from 'react-native-ui-kitten';
 import axios from 'axios';
 import LottieView from 'lottie-react-native';
-import { withNavigationFocus } from "react-navigation";
+import { withNavigationFocus, NavigationEvents } from "react-navigation";
 
 import {
   AppRegistry,
@@ -51,7 +51,7 @@ export default class ScanScreen extends Component {
 
   _confim = ()=> 
 
-    axios.post('http://192.168.0.76:8000/api',  this.state)
+    axios.post('http://192.168.0.157:8000/api',  this.state)
           .then((response) =>  { 
                               this.setState({animation : require("./res/succedGreen.json")})
                               Vibration.vibrate([200,200])
@@ -93,29 +93,37 @@ export default class ScanScreen extends Component {
     this._toggleModal()
     this.setState(
       { 
-        referencia: e.data.split(" ")[0] ,
-        sulfatante: e.data.split(" ")[2] ,
-        lote:e.data.split(" ")[3] ,
-        loteFilm: e.data.split(" ")[4],
-        caducidad: e.data.split(" ")[5],
-        bobina: e.data.split(" ")[6],
-        linea: e.data.split(" ")[7]
+        /* referencia: e.data.split(" ")[0] ,
+        sulfatante: e.data.split(" ")[2] , */
+        lote:e.data.split(" ")[0] ,
+        loteFilm: e.data.split(" ")[1],
+        /* caducidad: e.data.split(" ")[5], */
+        bobina: e.data.split(" ")[3],
+        linea: e.data.split(" ")[6]
       })
   }
 
   render() {
 
     return (
-      
+
+      <View>
+      <NavigationEvents
+          onWillFocus={() => {
+            this.setState({reactivate: true})
+              }}
+              />
+              
         <QRCodeScanner
-          reactivate={true}
+          reactivate={this.state.reactivate}
           ref={(node) => { this.scanner = node }}
           reactivateTimeout= {4000}
           cameraProps={{captureAudio: false}}
           onRead={this.onSuccess.bind(this)}
-          cameraStyle={styles.cameraContainer}
           bottomContent={
             <View>
+
+              
               
         
               <Modal  isVisible= {this.state.succed}
@@ -206,6 +214,7 @@ export default class ScanScreen extends Component {
           bottomViewStyle={styles.bottomContainer}
 
         />
+        </View>
     );
   }
 }
