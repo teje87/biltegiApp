@@ -2,7 +2,7 @@ import React from "react";
 import { View, Text } from "react-native";
 import { createBottomTabNavigator, createStackNavigator, createAppContainer, NavigationEvents } from "react-navigation";
 import axios from 'axios';
-import {RkCard} from "react-native-ui-kitten";
+import {ListItem, Header, Button} from 'react-native-elements';
 import ScanScreen from "./ScanScreen";
 import PreScanScreen from "./PreScanScreen"
 
@@ -17,7 +17,7 @@ class HomeScreen extends React.Component {
   }
   
   getLabelRecords = () => {
-      axios.get('http://192.168.0.157:8000/api/labelling').then((labellingRecords) => this.setState(labellingRecords))
+      axios.get('http://192.168.0.157:8000/api/labelling').then((labellingRecords) => this.setState({labellingRecords: labellingRecords.data}))
   }
   
   componentWillMount(){
@@ -26,20 +26,33 @@ class HomeScreen extends React.Component {
   
   render() {
     return (
-      <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-        <Text>Home Screen</Text>
-          {this.state.labellingRecords.map((record)=> {
-            return(
-              <RkCard rkType='shadowed'>
-                <View rkCardHeader>
-                  <Text>Registro</Text>
-                </View>
-                <View rkCardContent>
-                  <Text>---</Text>
-                </View>
-              </RkCard>
-            )
-          })} 
+      <View style={{ flex: 1 }}>
+        
+        <Header
+          leftComponent={{ icon: 'menu', color: '#fff' }}
+          centerComponent={{ text: 'biltegiApp', style: { color: '#fff' } }}
+          rightComponent={{ icon: 'home', color: '#fff' }}/>
+
+        <Button
+          icon={{
+            name: "arrow-right",
+            size: 15,
+            color: "white"
+          }}
+          title="Log records"
+          onPress={()=> console.warn(this.state.labellingRecords)}
+        />
+
+
+        {this.state.labellingRecords.map( (record,i) => {
+          return(
+            <ListItem
+              key={i}
+              title={record.referencia}
+              topDivider
+              bottomDivider
+            />
+            )})} 
       </View>
     );
   }
