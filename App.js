@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, RefreshControl } from "react-native";
+import { View, Text, RefreshControl, TouchableHighlight } from "react-native";
 import { createBottomTabNavigator, createStackNavigator, createAppContainer, NavigationEvents } from "react-navigation";
 import axios from 'axios';
 import {ListItem, Header, Button, Icon} from 'react-native-elements';
@@ -37,7 +37,7 @@ class HomeScreen extends React.Component {
         
         <Header
           leftComponent={{ icon: 'menu', color: '#fff' }}
-          centerComponent={{ text: 'biltegiApp', style: { color: '#fff' } }}
+          centerComponent={{ text: 'labelling', style: { color: '#fff' } }}
           rightComponent={{ icon: 'home', color: '#fff' }}/>
 
       <ScrollView 
@@ -59,32 +59,35 @@ class HomeScreen extends React.Component {
         /> */}
 
 
-        {this.state.labellingRecords.map( (record,i) => {
+        {this.state.labellingRecords.reverse().map( (record,i) => {
           return(
-            <ListItem
-              key={i}
-              title={record.referencia}
-              leftAvatar={{title: record.operario}}
-              subtitle={
-                <View style={{flex:1, flexDirection: 'row', justifyContent: 'space-between'}}>
+            <TouchableHighlight key={i} onPress={()=> console.log("iepi")}>
+              <ListItem
+                key={i}
+                title={record.referencia}
+                leftAvatar={{title: record.operario}}
+                subtitle={
+                  <View style={{flex:1, flexDirection: 'row', justifyContent: 'space-between'}}>
 
-                  <View>
-                    <Text>{record.lote}</Text>
-                    <Text>{record.lote_film} - {record.linea}</Text>
-                    <Text></Text>
+                    <View>
+                      <Text>{record.lote}</Text>
+                      <Text>{record.lote_film} - {record.linea}</Text>
+                      <Text></Text>
+                    </View>
+
+                    <View>
+                      <Text>{record.fecha}</Text>
+                      <Text>{record.hora}</Text>
+                    </View>
+
                   </View>
-
-                  <View>
-                    <Text>{record.fecha}</Text>
-                    <Text>{record.hora}</Text>
-                  </View>
-
-                </View>
-              }
-              topDivider
-              bottomDivider
-            />
+                }
+                topDivider
+                bottomDivider
+              />
+          </TouchableHighlight>
             )})} 
+            
         </ScrollView>
       </View>
     );
