@@ -34,7 +34,11 @@ export default class ScanScreen extends Component {
       sulfatante:"",
       lote : "",
       loteFilm : "",
-      operario:""
+      operario:"",
+      productionsParameters:{
+        lote:"59799",
+        loteFilm:""
+      }
     }
   }
 
@@ -100,7 +104,10 @@ export default class ScanScreen extends Component {
         /* caducidad: e.data.split(" ")[5], */
         bobina: e.data.split(" ")[3],
         linea: e.data.split(" ")[6]
-      })
+      }, ()=> this.state.lote != this.state.productionsParameters.lote ? console.warn("distintos" ) : null )
+      
+      //check lote actual o no
+    
   }
 
   render() {

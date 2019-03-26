@@ -14,7 +14,7 @@ class HomeScreen extends React.Component {
     super(props)
     this.state = {
       labellingRecords: [],
-      refreshing: false
+      refreshing: false,
     }
   }
   
