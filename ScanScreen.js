@@ -36,8 +36,8 @@ export default class ScanScreen extends Component {
       loteFilm : "",
       operario:"",
       productionsParameters:{
-        lote:"59799",
-        loteFilm:""
+        lote:"59798",
+        loteFilm:"846127"
       }
     }
   }
@@ -52,9 +52,8 @@ export default class ScanScreen extends Component {
 
 
 
-
+  // Post record to the db and display animation
   _confim = ()=> 
-
     axios.post('http://192.168.0.157:8000/api',  this.state)
           .then((response) =>  { 
                               this.setState({animation : require("./res/succedGreen.json")})
@@ -91,10 +90,17 @@ export default class ScanScreen extends Component {
     )
   }
 
+  
+  matchParameters(){
+    if(this.state.lote == this.state.productionsParameters.lote && this.state.loteFilm == this.state.productionsParameters.loteFilm){
+      return true
+    }else{
+      return false
+    }
+  }
 
   onSuccess(e) {
     this.getDate()
-    this._toggleModal()
     this.setState(
       { 
         /* referencia: e.data.split(" ")[0] ,
@@ -104,9 +110,8 @@ export default class ScanScreen extends Component {
         /* caducidad: e.data.split(" ")[5], */
         bobina: e.data.split(" ")[3],
         linea: e.data.split(" ")[6]
-      }, ()=> this.state.lote != this.state.productionsParameters.lote ? console.warn("distintos" ) : null )
-      
-      //check lote actual o no
+      }, ()=> {this.matchParameters() ? this._toggleModal() : console.warn(this.state.loteFilm) }) 
+    
     
   }
 
@@ -143,17 +148,26 @@ export default class ScanScreen extends Component {
                           loop = {false}/>
                     </View>
               </Modal>
+
+              <Modal  isVisible= {this.state.succed}
+                      onBackdropPress={() => this.setState({ succed: false })}>
+                      <View style={{ flex: 1 }}>
+                        <LottieView
+                          source={this.state.animation}
+                          resizeMode = "cover"
+                          autoPlay
+                          loop = {false}/>
+                    </View>
+              </Modal>
               
               
               <Modal  isVisible= {this.state.isModalVisible}>
-
                 <ScrollView style={{ flex: 1, alignContent: "center", borderRadius:10 }}>
-                  <RkCard style= {{ flex: 1, alignItems: "center", borderRadius:10}}>
-                  
+                  <RkCard style= {{ flex: 1, alignItems: "center", borderRadius:10}}>                  
+                    
                     <View rkCardHeader>
                       <Icon name="check" size={50} color="green" />
                     </View>
-
                     
                     <RkTextInput 
                       rkType = {"form"}
