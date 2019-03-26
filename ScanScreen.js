@@ -7,13 +7,15 @@ import {RkButton,RkText, RkTextInput, RkCard, RkPicker} from 'react-native-ui-ki
 import axios from 'axios';
 import LottieView from 'lottie-react-native';
 import { withNavigationFocus, NavigationEvents } from "react-navigation";
+import Toast, {DURATION} from 'react-native-easy-toast'
 
 import {
   AppRegistry,
   StyleSheet,
   View,
   ScrollView,
-  Vibration
+  Vibration,
+  Text
 } from 'react-native';
 
 import QRCodeScanner from 'react-native-qrcode-scanner';
@@ -53,7 +55,7 @@ export default class ScanScreen extends Component {
 
 
   // Post record to the db and display animation
-  _confim = ()=> 
+  _confirm = ()=> 
     axios.post('http://192.168.0.157:8000/api',  this.state)
           .then((response) =>  { 
                               this.setState({animation : require("./res/succedGreen.json")})
@@ -99,6 +101,31 @@ export default class ScanScreen extends Component {
     }
   }
 
+  notMatchAlert(){
+    this.refs.toast.show(
+      <View style={{flex:1}}>
+        <RkCard>
+          <View rkCardHeader>
+            <Text>ALERTA</Text>
+          </View>
+          <View rkCardImg>
+            <LottieView
+                            source={require("./res/1174-warning.json")}
+                            
+                            autoPlay
+                            loop = {false}/>
+          </View>
+          <View rkCardContent>
+            <Text> La lectura de bobina no corresponde al lote actual ({this.state.productionsParameters.lote})</Text>
+          </View>
+        </RkCard>
+      </View>
+      , 5000, ()=> this._toggleModal())
+    
+    
+    
+  }
+
   onSuccess(e) {
     this.getDate()
     this.setState(
@@ -110,7 +137,7 @@ export default class ScanScreen extends Component {
         /* caducidad: e.data.split(" ")[5], */
         bobina: e.data.split(" ")[3],
         linea: e.data.split(" ")[6]
-      }, ()=> {this.matchParameters() ? this._toggleModal() : console.warn(this.state.loteFilm) }) 
+      }, ()=> {this.matchParameters() ? this._toggleModal() : this.notMatchAlert() }) 
     
     
   }
@@ -120,6 +147,9 @@ export default class ScanScreen extends Component {
     return (
 
       <View>
+
+      
+
       <NavigationEvents
           onWillFocus={() => {
             this.setState({reactivate: true})
@@ -135,19 +165,15 @@ export default class ScanScreen extends Component {
           bottomContent={
             <View>
 
-              
-              
-        
-              <Modal  isVisible= {this.state.succed}
-                      onBackdropPress={() => this.setState({ succed: false })}>
-                      <View style={{ flex: 1 }}>
-                        <LottieView
-                          source={this.state.animation}
-                          resizeMode = "cover"
-                          autoPlay
-                          loop = {false}/>
-                    </View>
-              </Modal>
+              <Toast
+                    ref="toast"
+                    position='top'
+                    style={{width:300, backgroundColor:"white"}}
+                    positionValue={5}
+                    fadeInDuration={750}
+                    fadeOutDuration={1000}
+                    opacity={0.8}
+                />
 
               <Modal  isVisible= {this.state.succed}
                       onBackdropPress={() => this.setState({ succed: false })}>
@@ -221,7 +247,7 @@ export default class ScanScreen extends Component {
 
                   <View rkCardFooter>
                     <RkButton onPress={this._toggleModal} >Cancelar</RkButton>
-                    <RkButton onPress={this._confim}  rkType= {"success"}>Registrar</RkButton>
+                    <RkButton onPress={this._confirm}  rkType= {"success"}>Registrar</RkButton>
                   </View>
 
                 </RkCard>
